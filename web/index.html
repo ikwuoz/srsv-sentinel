@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1a1a18">
+<title>Standard Reserve — Charters, a visual guide</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header class="topbar">
+  <span class="brand">STANDARD × Research</span>
+  <nav>
+    <a href="#seat">00 Seat</a><a href="#yield">01 Yield</a><a href="#license">02 License</a><a href="#charter">03 Charter</a><a href="#exits">04 Exits</a><a href="#regimes">05 Regimes</a><a href="#defense">06 Defense</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="towers" aria-hidden="true">
+    <svg width="180" height="72" viewBox="0 0 180 72" fill="none" stroke="#ece9e2" stroke-width="2">
+      <rect x="28" y="14" width="46" height="58"/><rect x="106" y="14" width="46" height="58"/>
+      <line x1="28" y1="26" x2="74" y2="26"/><line x1="28" y1="38" x2="74" y2="38"/>
+      <line x1="28" y1="50" x2="74" y2="50"/><line x1="106" y1="26" x2="152" y2="26"/>
+      <line x1="106" y1="38" x2="152" y2="38"/><line x1="106" y1="50" x2="152" y2="50"/>
+      <line x1="74" y1="60" x2="106" y2="60"/>
+    </svg>
+  </div>
+  <div class="eyebrow">The sovereign onchain central bank · Charter guide</div>
+  <h1>A charter is a <em>company.</em><br>Branches are its <em>stores.</em></h1>
+  <p class="lede">One currency ($STANDARD), one market (ETH ⇄ $STANDARD on a hooked Uniswap v4 pool),
+  one signal (net ETH flow). This page makes the banker’s decisions tangible: earn, expand, exit.</p>
+  <span class="badge">MOCK DATA · ILLUSTRATIVE PRE-LAUNCH · NOT INVESTMENT ADVICE</span>
+</div>
+
+<main>
+  <section class="chapter" id="seat">
+    <div class="ch-num">00 · THE SEAT</div>
+    <h2>What does a charter <em>do?</em></h2>
+    <p class="short"><strong>Short answer —</strong> holding one makes you a banker: your branches earn a <span class="hl-g">pro-rata share of every epoch’s issuance</span>. <span class="hl">1,000 Founding Charters</span> at genesis (soulbound), then daily Dutch auctions in ETH.</p>
+    <p style="color:var(--ink-dim)">Lifecycle with teeth: retire your last branch and <span class="hl">the charter burns</span> — no revolving doors. The only way back in is winning another auction.</p>
+  </section>
+
+  <section class="chapter" id="yield">
+    <div class="ch-num">01 · YIELD</div>
+    <h2>One branch, <em>what is it worth?</em></h2>
+    <p class="short"><strong>Short answer —</strong> a branch’s daily take is <span class="hl-g num">base × m ÷ N</span>: base issuance times the policy multiplier, split across all branches. More branches = bigger cut, but every new branch dilutes everyone.</p>
+    <div class="try">
+      <div class="try-head">Try it · branch yield simulator</div>
+      <div class="try-grid">
+        <div class="controls">
+          <div class="ctl"><label>Your branches <output id="y-b-out">3</output></label>
+            <input id="y-b" type="range" min="1" max="10" step="1" value="3"></div>
+          <div class="ctl"><label>System branches N <output id="y-n-out">12,000</output></label>
+            <input id="y-n" type="range" min="1000" max="50000" step="1000" value="12000"></div>
+          <div class="ctl"><label>Multiplier m <output id="y-m-out">1.00</output></label>
+            <input id="y-m" type="range" min="0.1" max="3" step="0.05" value="1"></div>
+          <div class="ctl"><label>Base issuance / day</label>
+            <select id="y-base"><option value="500000">500k</option><option value="1000000" selected>1M</option><option value="2000000">2M</option></select></div>
+        </div>
+        <div><div class="graph" id="y-graph"></div><div class="readout" id="y-read" aria-live="polite"></div></div>
+      </div>
+    </div>
+    <details class="go-deeper"><summary>Go deeper · what the whitepaper says</summary>
+      <p>Issuance streams second-by-second across the epoch; a branch earns from the moment it opens. Cuts are immediate, raises must be earned through sustained inflows. When the 900M issuance budget exhausts, the economy runs closed-loop on recycled fees.</p>
+    </details>
+  </section>
+
+  <section class="chapter" id="license">
+    <div class="ch-num">02 · LICENSE AUCTION</div>
+    <h2>When should you <em>buy the dip</em> on branches?</h2>
+    <p class="short"><strong>Short answer —</strong> 100 expansion licenses a day, Dutch auction in $STANDARD (100% burned). Price opens at <span class="hl-s num">2× yesterday’s close</span> and decays exponentially to the floor over 24h. Wait for cheap, risk sell-out.</p>
+    <div class="try">
+      <div class="try-head">Try it · license decay curve</div>
+      <div class="try-grid">
+        <div class="controls">
+          <div class="ctl"><label>Yesterday close Plast <output id="l-p-out">4,200</output></label>
+            <input id="l-p" type="range" min="900" max="12000" step="100" value="4200"></div>
+          <div class="ctl"><label>Hour you buy <output id="l-t-out">14h</output></label>
+            <input id="l-t" type="range" min="0" max="24" step="0.5" value="14"></div>
+          <div class="ctl"><label>Demand</label>
+            <select id="l-d"><option value="cold">cold · sells out late</option><option value="normal" selected>normal</option><option value="hot">hot · sells out early</option></select></div>
+        </div>
+        <div><div class="graph" id="l-graph"></div><div class="readout" id="l-read" aria-live="polite"></div>
+          <div class="quiz" id="l-quiz">
+            <span class="dim" style="font-family:var(--mono);font-size:12px;color:var(--ink-dim)">Predict: buying at 18h vs 6h saves roughly…</span>
+            <button data-a="10%">~10%</button><button data-a="45%">~45%</button><button data-a="80%">~80%</button>
+            <span class="verdict" aria-live="polite"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <details class="go-deeper"><summary>Go deeper</summary>
+      <p>Each charter caps at 3 licenses/day; unsold supply never rolls over. Repricing is asymmetric: demand spikes double the open daily until price catches it (~100× in a week); dead demand decays to the floor within a day — expansion is cheapest in contractions.</p>
+    </details>
+  </section>
+
+  <section class="chapter" id="charter">
+    <div class="ch-num">03 · CHARTER AUCTION</div>
+    <h2>What does the <em>next seat</em> cost?</h2>
+    <p class="short"><strong>Short answer —</strong> same Dutch curve, denominated in ETH, opening at <span class="hl-b num">3× yesterday’s close</span>. Payment routes to the fee engine (reserves / buybacks / POL), so each entrant strengthens the balance sheet.</p>
+    <div class="try">
+      <div class="try-head">Try it · charter price curve</div>
+      <div class="try-grid">
+        <div class="controls">
+          <div class="ctl"><label>Yesterday close (ETH) <output id="c-p-out">0.90</output></label>
+            <input id="c-p" type="range" min="0.1" max="5" step="0.05" value="0.9"></div>
+          <div class="ctl"><label>Hour you bid <output id="c-t-out">10h</output></label>
+            <input id="c-t" type="range" min="0" max="24" step="0.5" value="10"></div>
+          <div class="ctl"><label>Seats per day</label>
+            <select id="c-s"><option value="0">0 · closed</option><option value="1" selected>1</option><option value="5">5</option></select></div>
+        </div>
+        <div><div class="graph" id="c-graph"></div><div class="readout" id="c-read" aria-live="polite"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="chapter" id="exits">
+    <div class="ch-num">04 · EXITS</div>
+    <h2>What does it cost to <em>leave?</em></h2>
+    <p class="short"><strong>Short answer —</strong> retiring a branch mints its share minus a congestion-priced resolution fee: quadratic from a floor (quiet) to a ceiling (bank run) on 7-day exit pressure. <span class="hl-c">Half burns, half pays those who stayed.</span></p>
+    <div class="try">
+      <div class="try-head">Try it · resolution fee curve</div>
+      <div class="try-grid">
+        <div class="controls">
+          <div class="ctl"><label>Exit pressure P <output id="e-p-out">5.0%</output></label>
+            <input id="e-p" type="range" min="0" max="30" step="0.5" value="5"></div>
+          <div class="ctl"><label>Preset</label>
+            <select id="e-s"><option value="quiet">quiet</option><option value="elevated" selected>elevated</option><option value="heavy">heavy</option><option value="bankrun">bank run</option></select></div>
+          <div class="ctl"><label>Exit size ($STANDARD)</label>
+            <select id="e-z"><option value="10000" selected>10,000</option><option value="100000">100,000</option><option value="1000000">1,000,000</option></select></div>
+        </div>
+        <div><div class="graph" id="e-graph"></div><div class="readout" id="e-read" aria-live="polite"></div></div>
+      </div>
+    </div>
+    <details class="go-deeper"><summary>Go deeper</summary>
+      <p>Your rate locks at commit; withdrawals never pause. Dormancy is harsher: 30 days inactive → anyone can report, 70% revocation fee, charter burns. A free check-in resets the clock.</p>
+    </details>
+  </section>
+
+  <section class="chapter" id="regimes">
+    <div class="ch-num">05 · REGIMES</div>
+    <h2>Will the bank <em>flip?</em></h2>
+    <p class="short"><strong>Short answer —</strong> one signal: <span class="hl num">F_n = buys − sells</span> (ETH). Fee routing follows <span class="hl num">sign(F_n)</span>; issuance follows <span class="hl num">signal = F_{n−1} + F_{n−2}</span>. Same math as the sentinel agent — wire it live later.</p>
+    <div class="try">
+      <div class="try-head">Try it · flip forecaster (live sentinel logic)</div>
+      <div class="try-grid">
+        <div class="controls">
+          <div class="ctl"><label>F_{n−1} (ETH) <output id="r-a-out">+2.0</output></label>
+            <input id="r-a" type="range" min="-5" max="5" step="0.1" value="2"></div>
+          <div class="ctl"><label>F_n partial (ETH) <output id="r-b-out">−1.5</output></label>
+            <input id="r-b" type="range" min="-5" max="5" step="0.1" value="-1.5"></div>
+          <div class="ctl"><label>Scenario</label>
+            <select id="r-s"><option value="trend">sustained inflow</option><option value="chop" selected>chop</option><option value="bankrun">bank run</option></select></div>
+        </div>
+        <div><div class="graph" id="r-graph"></div><div class="readout" id="r-read" aria-live="polite"></div></div>
+      </div>
+    </div>
+  </section>
+  <section class="chapter" id="defense">
+    <div class="ch-num">06 · DEFENSE</div>
+    <h2>How fast can the bank <em>buy back?</em></h2>
+    <p class="short"><strong>Short answer —</strong> in contraction the vault burns everything it buys, but rate-limited: <span class="hl num">min(10% of vault, 0.2% of pool)</span> per hourly tick — so defense can't be baited into one blockable shot. Unspent balance rolls forward; the vault never sells.</p>
+    <div class="try">
+      <div class="try-head">Try it · buyback trajectory</div>
+      <div class="try-grid">
+        <div class="controls">
+          <div class="ctl"><label>Vault balance V (ETH) <output id="d-v-out">80</output></label>
+            <input id="d-v" type="range" min="1" max="500" step="1" value="80"></div>
+          <div class="ctl"><label>Pool reserves R (ETH) <output id="d-r-out">4,000</output></label>
+            <input id="d-r" type="range" min="500" max="20000" step="100" value="4000"></div>
+          <div class="ctl"><label>Horizon (hours) <output id="d-h-out">24</output></label>
+            <input id="d-h" type="range" min="6" max="72" step="1" value="24"></div>
+          <div class="ctl"><label>Scenario</label>
+            <select id="d-s"><option value="early" selected>early contraction</option><option value="deep">deep defense</option><option value="thin">thin pool</option></select></div>
+        </div>
+        <div><div class="graph" id="d-graph"></div><div class="readout" id="d-read" aria-live="polite"></div></div>
+      </div>
+    </div>
+    <details class="go-deeper"><summary>Go deeper</summary>
+      <p>Near 5% of pool depth per day at launch settings. Whichever way price moves, volatility becomes balance sheet: expansion stacks hard reserves, contraction finances burns. Same <span class="num">spend_tick</span> math as the sentinel — change V or R and watch the cap bind.</p>
+    </details>
+  </section>
+</main>
+
+<footer>STANDARD × Research · reache me on X @nuel_ikwuoma</footer>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

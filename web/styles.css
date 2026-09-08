@@ -1,0 +1,110 @@
+/* Protocol-aligned theme (interpreted from standardreserve.xyz/app/protocol):
+   monochrome ink-on-charcoal, twin-tower motif, thin rules, uppercase eyebrow labels.
+   Site is JS-rendered so exact tokens were unreadable; these match its
+   theme-color #1a1a18 + monochrome skyline language. */
+:root {
+  --ink: #ece9e2;
+  --ink-dim: #a8a49b;
+  --ink-faint: #6f6c65;
+  --bg: #1a1a18;
+  --bg-2: #22221f;
+  --card: #141412;
+  --line: #33332f;
+  --accent: #ece9e2;
+  --good: #9fd6a4;
+  --bad: #e39a9a;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --serif: "khteka", Georgia, "Times New Roman", serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--serif); line-height: 1.55;
+}
+a { color: var(--ink); }
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 16px;
+  padding: 10px 20px; background: rgba(26,26,24,.94);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+}
+.topbar .brand { font-weight: 700; }
+.topbar nav { display: flex; gap: 14px; margin-left: auto; }
+.topbar nav a { color: var(--ink-dim); text-decoration: none; }
+.topbar nav a:hover { color: var(--ink); }
+.hero { max-width: 960px; margin: 0 auto; padding: 72px 20px 30px; text-align: center; }
+.hero .towers { display: flex; justify-content: center; margin-bottom: 18px; }
+.eyebrow {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--ink-dim);
+}
+h1 { font-size: clamp(34px, 6vw, 58px); line-height: 1.05; margin: 12px 0; font-weight: 600; }
+h1 em, h2 em { font-style: italic; }
+.lede { color: var(--ink-dim); max-width: 640px; margin: 0 auto; }
+.badge {
+  display: inline-block; font-family: var(--mono); font-size: 11px; letter-spacing: .1em;
+  border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px; color: var(--ink-dim);
+  margin-top: 16px;
+}
+main { max-width: 960px; margin: 0 auto; padding: 0 20px 80px; }
+.chapter { border-top: 1px solid var(--line); padding: 44px 0; }
+.ch-num { font-family: var(--mono); font-size: 12px; letter-spacing: .2em; color: var(--ink-faint); }
+h2 { font-size: clamp(24px, 4vw, 36px); margin: 8px 0 6px; }
+.short { border-left: 2px solid var(--ink); padding-left: 14px; color: var(--ink-dim); margin: 14px 0 20px; }
+.short strong { color: var(--ink); }
+.try {
+  background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+  padding: 18px; margin: 18px 0;
+}
+.try > .try-head {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--ink-dim); margin-bottom: 12px;
+}
+.try-grid { display: grid; grid-template-columns: 280px 1fr; gap: 18px; }
+@media (max-width: 760px) { .try-grid { grid-template-columns: 1fr; } }
+.controls { display: flex; flex-direction: column; gap: 14px; }
+.ctl label { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 12px; color: var(--ink-dim); margin-bottom: 6px; }
+.ctl output { color: var(--ink); }
+input[type="range"] { width: 100%; accent-color: var(--ink); }
+#yield input[type="range"] { accent-color: var(--good); }
+select {
+  width: 100%; background: var(--bg-2); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 6px; padding: 8px; font-family: var(--mono); font-size: 13px;
+}
+.graph { border: 1px solid var(--line); border-radius: 8px; background: #101010; padding: 8px; }
+/* Minimal section washes: whisper-light tints that never fight the text. */
+#yield .graph { background: linear-gradient(rgba(159,214,164,.07), rgba(159,214,164,.02)), #101010; }
+#license .graph { background: linear-gradient(rgba(216,199,154,.08), rgba(216,199,154,.02)), #101010; }
+#charter .graph { background: linear-gradient(rgba(169,191,209,.08), rgba(169,191,209,.02)), #101010; }
+#exits .graph { background: linear-gradient(rgba(217,154,140,.08), rgba(217,154,140,.02)), #101010; }
+#regimes .graph { background: linear-gradient(rgba(236,233,226,.05), rgba(236,233,226,.01)), #101010; }
+#defense .graph { background: linear-gradient(rgba(236,233,226,.06), rgba(217,154,140,.03)), #101010; }
+#defense input[type="range"] { accent-color: var(--ink); }
+#license input[type="range"] { accent-color: #d8c79a; }
+#charter input[type="range"] { accent-color: #a9bfd1; }
+#exits input[type="range"] { accent-color: #d99a8c; }
+/* Minimal text highlight: quiet paper-tint behind the few words that matter. */
+.hl { background: rgba(236,233,226,.13); border-radius: 3px; padding: 0 4px; white-space: nowrap; }
+.hl-g { background: rgba(159,214,164,.16); border-radius: 3px; padding: 0 4px; white-space: nowrap; }
+.hl-s { background: rgba(216,199,154,.16); border-radius: 3px; padding: 0 4px; white-space: nowrap; }
+.hl-b { background: rgba(169,191,209,.16); border-radius: 3px; padding: 0 4px; white-space: nowrap; }
+.hl-c { background: rgba(217,154,140,.16); border-radius: 3px; padding: 0 4px; white-space: nowrap; }
+.graph svg { width: 100%; height: auto; display: block; }
+.readout {
+  font-family: var(--mono); font-size: 13px; margin-top: 10px; color: var(--ink);
+  border-top: 1px dashed var(--line); padding-top: 10px;
+}
+.readout .dim { color: var(--ink-dim); }
+.quiz { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.quiz button {
+  background: transparent; color: var(--ink); border: 1px solid var(--line);
+  border-radius: 6px; padding: 6px 12px; font-family: var(--mono); font-size: 12px; cursor: pointer;
+}
+.quiz button:hover { border-color: var(--ink); }
+.quiz .verdict { font-family: var(--mono); font-size: 12px; color: var(--good); width: 100%; }
+details.go-deeper { margin-top: 12px; border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; }
+details.go-deeper summary { cursor: pointer; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-dim); }
+footer { border-top: 1px solid var(--line); padding: 26px 20px 60px; text-align: center; color: var(--ink-faint); font-family: var(--mono); font-size: 12px; }
+.num { font-variant-numeric: tabular-nums; }

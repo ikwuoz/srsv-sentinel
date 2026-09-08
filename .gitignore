@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.env
+data/latest.json
+data/epochs.json
+web/vendor/
