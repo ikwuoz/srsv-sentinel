@@ -9,6 +9,10 @@ import {
   issuanceRegime,
   flipNeeds,
   buybackTrajectory,
+  supplyProjection,
+  SUPPLY_CAP,
+  SUPPLY_GENESIS,
+  SUPPLY_BUDGET,
 } from "./vendor/math.js";
 
 export {
@@ -19,6 +23,10 @@ export {
   issuanceRegime,
   flipNeeds,
   buybackTrajectory,
+  supplyProjection,
+  SUPPLY_CAP,
+  SUPPLY_GENESIS,
+  SUPPLY_BUDGET,
 };
 
 // Illustrative pre-launch placeholders. Whitepaper v0.1 redacts exact numbers;

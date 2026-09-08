@@ -1,4 +1,4 @@
-import { PARAMS, licensePrice, feeAt, branchDailyYield, feeRegime, issuanceRegime, flipNeeds, buybackTrajectory } from "./data.js";
+import { PARAMS, licensePrice, feeAt, branchDailyYield, feeRegime, issuanceRegime, flipNeeds, buybackTrajectory, supplyProjection, SUPPLY_CAP, SUPPLY_GENESIS, SUPPLY_BUDGET } from "./data.js";
 
 const $ = (id) => document.getElementById(id);
 const fmt = (n, d = 0) => n.toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: d });
@@ -43,7 +43,9 @@ function renderYield() {
   const pts = Array.from({ length: 10 }, (_, i) => ({ x: i + 1, y: branchDailyYield(base, m, i + 1, N) }));
   chart($("y-graph"), { xs: pts.map((p) => p.x), series: [{ pts, color: "#9fd6a4", fill: true }], marker: { x: b, y: mine, label: `you: ${fmt(mine)}`, color: "#9fd6a4" }, yLabel: "$STANDARD / day", xLabel: "your branches →" });
   const paybackNote = one > 0 ? `one branch ≈ ${fmt(one)} / day` : "";
-  $("y-read").innerHTML = `YOUR TAKE <span class="num" style="color:#9fd6a4">${fmt(mine)}</span> $STANDARD/day <span class="dim">· share ${((b / N) * 100).toFixed(3)}% · ${paybackNote}</span>`;
+  const gross = base * m;
+  const runway = gross > 0 ? SUPPLY_BUDGET / (gross * 365) : Infinity;
+  $("y-read").innerHTML = `YOUR TAKE <span class="num" style="color:#9fd6a4">${fmt(mine)}</span> $STANDARD/day <span class="dim">· share ${((b / N) * 100).toFixed(3)}% · ${paybackNote}</span><br>BUDGET RUNWAY <span class="num">≈${runway === Infinity ? "∞" : runway.toFixed(1) + "y"}</span> <span class="dim">· 900M budget ÷ ${fmt(Math.round(gross))}/day gross (before burns — see 07)</span>`;
 }
 
 // ---- 02 license ----
@@ -59,7 +61,7 @@ function renderLicense() {
   const so = demandSellout(d);
   chart($("l-graph"), { xs, series: [{ pts, color: "#d8c79a", fill: true }], marker: { x: t, y: price, label: `${fmt(Math.round(price))}`, color: "#d8c79a" }, yLabel: "$STANDARD", xLabel: `0h → 24h · sells out ~${so}h` });
   const save = 1 - licensePrice(pStart, pFloor, 18) / licensePrice(pStart, pFloor, 6);
-  $("l-read").innerHTML = `PRICE NOW <span class="num" style="color:#d8c79a">${fmt(Math.round(price))}</span> $STANDARD <span class="dim">· open ${fmt(pStart)} → floor ${fmt(Math.round(pFloor))} · 100/day, ≤3 per charter</span>`;
+  $("l-read").innerHTML = `PRICE NOW <span class="num" style="color:#d8c79a">${fmt(Math.round(price))}</span> $STANDARD <span class="dim">· open ${fmt(pStart)} → floor ${fmt(Math.round(pFloor))} · 100/day, ≤3 per charter</span><br>DAILY SINK <span class="num" style="color:#d8c79a">≈${fmt(Math.round(price * 100))}</span> <span class="dim">· burned if all 100 sell — extends the 900M runway (see 07)</span>`;
   $("l-quiz").dataset.answer = `${Math.round(save * 100)}`;
 }
 
@@ -78,7 +80,6 @@ function renderCharter() {
   const price = licensePrice(pStart, pFloor, t);
   chart($("c-graph"), { xs, series: [{ pts, color: "#a9bfd1", fill: true }], marker: { x: t, y: price, label: `${price.toFixed(2)} ETH`, color: "#a9bfd1" }, yLabel: "ETH", xLabel: `0h → 24h · ${seats} seat(s)/day` });
   $("c-read").innerHTML = `BID NOW <span class="num" style="color:#a9bfd1">${price.toFixed(3)}</span> ETH <span class="dim">· open ${(pStart).toFixed(2)} (3×) → floor ${pFloor.toFixed(2)} · routes to fee engine</span>`;
-  $("c-read").innerHTML = `BID NOW <span class="num">${price.toFixed(3)}</span> ETH <span class="dim">· open ${(pStart).toFixed(2)} (3×) → floor ${pFloor.toFixed(2)} · routes to fee engine</span>`;
 }
 
 // ---- 04 exits ----
@@ -141,7 +142,37 @@ function renderDefense() {
     yLabel: "ETH", xLabel: "hour →",
   });
   const capped = ticks.length > 0 && Math.abs(ticks[0].spend - 0.002 * R) < 1e-9;
-  $("d-read").innerHTML = `SPENT <span class="num">${total.toFixed(1)}</span> ETH in ${ticks.length}h <span class="dim">· vault left ${remaining.toFixed(1)} · ${capped ? "pool-depth cap binds (0.2% R)" : "vault-share cap binds (10% V)"} · ≈${((total / Math.max(1, R)) * 100).toFixed(1)}% of pool depth</span>`;
+  const px = +($("d-px") ? $("d-px").value : 25000); // illustrative STANDARD per ETH
+  const burnDay = (total / Math.max(1, ticks.length)) * 24 * px;
+  $("d-read").innerHTML = `SPENT <span class="num">${total.toFixed(1)}</span> ETH in ${ticks.length}h <span class="dim">· vault left ${remaining.toFixed(1)} · ${capped ? "pool-depth cap binds (0.2% R)" : "vault-share cap binds (10% V)"} · ≈${((total / Math.max(1, R)) * 100).toFixed(1)}% of pool depth</span><br>EST. BURN <span class="num" style="color:#d99a8c">≈${fmt(Math.round(burnDay))}</span> $STANDARD/day <span class="dim">· at ${fmt(px)}/ETH illustrative (see 07)</span>`;
+}
+
+// ---- 07 supply ----
+function renderSupply() {
+  const m = +$("s-m").value, base = +$("s-base").value;
+  const lic = +$("s-lic").value, buy = +$("s-buy").value, H = +$("s-h").value;
+  $("s-m-out").textContent = m.toFixed(2);
+  $("s-lic-out").textContent = `${fmt(lic / 1000)}k`;
+  $("s-buy-out").textContent = `${fmt(buy / 1000)}k`;
+  $("s-h-out").textContent = `${H}`;
+  const gross = base * m, burn = lic + buy;
+  const { points, exhaustionYear } = supplyProjection({ grossPerDay: gross, burnPerDay: burn, years: H });
+  const circ = points.map((p) => ({ x: p.t, y: p.sCirc / 1e6 }));
+  const max = points.map((p) => ({ x: p.t, y: p.sMax / 1e6 }));
+  const exhX = exhaustionYear === null ? null : Math.min(exhaustionYear, H);
+  const band = exhX === null ? "" :
+    `<line x1="${(34 + (exhX / H) * (520 - 34 - 12)).toFixed(1)}" y1="20" x2="${(34 + (exhX / H) * (520 - 34 - 12)).toFixed(1)}" y2="206" stroke="#d8c79a" stroke-dasharray="4 3"/>`;
+  chart($("s-graph"), {
+    xs: points.map((p) => p.t), band,
+    series: [
+      { pts: max, color: "#6f6c65" },
+      { pts: circ, color: "#ece9e2", fill: true },
+    ],
+    marker: exhX === null ? null : { x: exhX, y: (SUPPLY_GENESIS + Math.min(SUPPLY_BUDGET, gross * 365 * exhX) - burn * 365 * exhX) / 1e6, label: exhaustionYear > H ? `budget outlives chart` : `budget out ≈${exhaustionYear.toFixed(1)}y`, color: "#d8c79a" },
+    yLabel: "M $STANDARD", xLabel: "years →",
+  });
+  const end = points[points.length - 1];
+  $("s-read").innerHTML = `EXHAUSTION <span class="num" style="color:#d8c79a">${exhaustionYear === null ? "—" : "≈" + exhaustionYear.toFixed(1) + "y"}</span> <span class="dim">· at ${H}y: circ ${fmt(Math.round(end.sCirc / 1e6))}M · max ${fmt(Math.round(end.sMax / 1e6))}M · net ${gross >= burn ? "+" : ""}${fmt(Math.round((gross - burn) / 1000))}k/day</span>`;
 }
 
 function bind(id, fn) {
@@ -166,7 +197,8 @@ $("r-s").addEventListener("change", () => {
   renderRegimes();
 });
 
-for (const id of ["d-v", "d-r", "d-h", "d-s"]) bind(id, renderDefense);
+for (const id of ["d-v", "d-r", "d-h", "d-s", "d-px"]) bind(id, renderDefense);
+for (const id of ["s-m", "s-base", "s-lic", "s-buy", "s-h"]) bind(id, renderSupply);
 $("d-s").addEventListener("change", () => {
   const v = $("d-s").value;
   if (v === "early") { $("d-v").value = "80"; $("d-r").value = "4000"; $("d-h").value = "24"; }
@@ -187,7 +219,7 @@ $("l-quiz").addEventListener("click", (ev) => {
 });
 
 // Shareable state: slider/select positions persist in the URL hash.
-const STATE_IDS = ["y-b","y-n","y-m","y-base","l-p","l-t","l-d","c-p","c-t","c-s","e-p","e-s","e-z","r-a","r-b","r-s","d-v","d-r","d-h","d-s"];
+const STATE_IDS = ["y-b","y-n","y-m","y-base","l-p","l-t","l-d","c-p","c-t","c-s","e-p","e-s","e-z","r-a","r-b","r-s","d-v","d-r","d-h","d-s","d-px","s-m","s-base","s-lic","s-buy","s-h"];
 function restoreState() {
   const h = location.hash.replace(/^#/, "");
   if (!h) return;
@@ -208,4 +240,4 @@ function saveState() {
 for (const id of STATE_IDS) $(id).addEventListener("change", saveState);
 restoreState();
 
-renderYield(); renderLicense(); renderCharter(); renderExits(); renderRegimes(); renderDefense();
+renderYield(); renderLicense(); renderCharter(); renderExits(); renderRegimes(); renderDefense(); renderSupply();

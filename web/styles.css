@@ -82,6 +82,8 @@ select {
 #regimes .graph { background: linear-gradient(rgba(236,233,226,.05), rgba(236,233,226,.01)), #101010; }
 #defense .graph { background: linear-gradient(rgba(236,233,226,.06), rgba(217,154,140,.03)), #101010; }
 #defense input[type="range"] { accent-color: var(--ink); }
+#supply .graph { background: linear-gradient(rgba(216,199,154,.07), rgba(216,199,154,.02)), #101010; }
+#supply input[type="range"] { accent-color: #d8c79a; }
 #license input[type="range"] { accent-color: #d8c79a; }
 #charter input[type="range"] { accent-color: #a9bfd1; }
 #exits input[type="range"] { accent-color: #d99a8c; }

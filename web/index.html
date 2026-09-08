@@ -11,7 +11,7 @@
 <header class="topbar">
   <span class="brand">STANDARD × Research</span>
   <nav>
-    <a href="#seat">00 Seat</a><a href="#yield">01 Yield</a><a href="#license">02 License</a><a href="#charter">03 Charter</a><a href="#exits">04 Exits</a><a href="#regimes">05 Regimes</a><a href="#defense">06 Defense</a>
+    <a href="#seat">00 Seat</a><a href="#yield">01 Yield</a><a href="#license">02 License</a><a href="#charter">03 Charter</a><a href="#exits">04 Exits</a><a href="#regimes">05 Regimes</a><a href="#defense">06 Defense</a><a href="#supply">07 Supply</a>
   </nav>
 </header>
 
@@ -172,6 +172,8 @@
             <input id="d-h" type="range" min="6" max="72" step="1" value="24"></div>
           <div class="ctl"><label>Scenario</label>
             <select id="d-s"><option value="early" selected>early contraction</option><option value="deep">deep defense</option><option value="thin">thin pool</option></select></div>
+          <div class="ctl"><label>$STANDARD per ETH (illustrative)</label>
+            <select id="d-px"><option value="10000">10,000</option><option value="25000" selected>25,000</option><option value="50000">50,000</option></select></div>
         </div>
         <div><div class="graph" id="d-graph"></div><div class="readout" id="d-read" aria-live="polite"></div></div>
       </div>
@@ -180,9 +182,36 @@
       <p>Near 5% of pool depth per day at launch settings. Whichever way price moves, volatility becomes balance sheet: expansion stacks hard reserves, contraction finances burns. Same <span class="num">spend_tick</span> math as the sentinel — change V or R and watch the cap bind.</p>
     </details>
   </section>
+
+  <section class="chapter" id="supply">
+    <div class="ch-num">07 · SUPPLY</div>
+    <h2>When does the <em>budget run out?</em></h2>
+    <p class="short"><strong>Short answer —</strong> 1B hard cap, 100M genesis liquidity, <span class="hl">900M issuance budget</span>. Circulating supply is a receipt: <span class="hl num">withdrawals − burns</span>. Burns (licenses, buybacks, half of exit fees) don't just cut float — they permanently lower the maximum supply that can ever exist, and stretch the runway below.</p>
+    <div class="try">
+      <div class="try-head">Try it · circulating vs max supply</div>
+      <div class="try-grid">
+        <div class="controls">
+          <div class="ctl"><label>Multiplier m <output id="s-m-out">1.00</output></label>
+            <input id="s-m" type="range" min="0.1" max="3" step="0.05" value="1"></div>
+          <div class="ctl"><label>Base issuance / day</label>
+            <select id="s-base"><option value="500000">500k</option><option value="1000000" selected>1M</option><option value="2000000">2M</option></select></div>
+          <div class="ctl"><label>License burn / day <output id="s-lic-out">250k</output></label>
+            <input id="s-lic" type="range" min="0" max="2000000" step="50000" value="250000"></div>
+          <div class="ctl"><label>Buyback + fee burn / day <output id="s-buy-out">100k</output></label>
+            <input id="s-buy" type="range" min="0" max="2000000" step="50000" value="100000"></div>
+          <div class="ctl"><label>Horizon (years) <output id="s-h-out">6</output></label>
+            <input id="s-h" type="range" min="3" max="30" step="1" value="6"></div>
+        </div>
+        <div><div class="graph" id="s-graph"></div><div class="readout" id="s-read" aria-live="polite"></div></div>
+      </div>
+    </div>
+    <details class="go-deeper"><summary>Go deeper</summary>
+      <p>Gross issuance stops the moment cumulative mints hit 900M — the marker on the curve. After that the economy runs closed-loop on recycled fees. Every unit burned before exhaustion is a unit of budget that never becomes someone's exit liquidity.</p>
+    </details>
+  </section>
 </main>
 
-<footer>STANDARD × Research · reache me on X @nuel_ikwuoma</footer>
+<footer>STANDARD × Research · reache me on X [@nuel_ikwuoma](https://a.com/nuel_ikwuoma)</footer>
 <script type="module" src="./app.js"></script>
 </body>
 </html>

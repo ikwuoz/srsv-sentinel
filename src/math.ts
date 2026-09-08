@@ -47,6 +47,48 @@ export function flipNeeds(prevFn: number, partialFn: number): {
   return { needFee, needIssuance, impliedSignal };
 }
 
+// §3: supply identity. Hard cap 1B; 100M genesis POL (never withdrawable);
+// 900M issuance budget. S_circ(t) = genesis + M(t) − B(t); S_max(t) = cap − B(t).
+export const SUPPLY_CAP = 1_000_000_000;
+export const SUPPLY_GENESIS = 100_000_000;
+export const SUPPLY_BUDGET = SUPPLY_CAP - SUPPLY_GENESIS;
+
+export interface SupplyPoint {
+  t: number; // years since launch
+  sCirc: number;
+  sMax: number;
+}
+
+// Project circulating vs max supply under constant gross issuance and burns.
+// Gross issuance stops permanently once cumulative M hits the budget
+// (closed-loop on recycled fees thereafter); burns continue.
+export function supplyProjection(opts: {
+  grossPerDay: number;
+  burnPerDay: number;
+  years: number;
+  stepsPerYear?: number;
+}): { points: SupplyPoint[]; exhaustionYear: number | null } {
+  const gross = Math.max(0, opts.grossPerDay);
+  const burn = Math.max(0, opts.burnPerDay);
+  const years = Math.max(1, opts.years);
+  const steps = Math.max(8, Math.floor(opts.stepsPerYear ?? 12));
+  const exhaustionYear = gross > 0 ? SUPPLY_BUDGET / (gross * 365) : null;
+  const points: SupplyPoint[] = [];
+  const total = Math.ceil(years * steps);
+  for (let i = 0; i <= total; i++) {
+    const tt = i / steps; // years
+    const m = Math.min(SUPPLY_BUDGET, gross * 365 * tt);
+    // Burns can't exceed what exists (genesis + minted).
+    const b = Math.min(burn * 365 * tt, SUPPLY_GENESIS + m);
+    points.push({
+      t: tt,
+      sCirc: Math.max(0, SUPPLY_GENESIS + m - b),
+      sMax: Math.max(0, SUPPLY_CAP - b),
+    });
+  }
+  return { points, exhaustionYear };
+}
+
 // §11.1: contraction-vault buyback trajectory. Each hourly tick spends
 // min(0.10 * V, 0.002 * R); unspent balance rolls forward; the vault never sells.
 export function buybackTrajectory(
