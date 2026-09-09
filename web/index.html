@@ -13,11 +13,12 @@
   <nav>
     <a href="#seat">00 Seat</a><a href="#yield">01 Yield</a><a href="#license">02 License</a><a href="#charter">03 Charter</a><a href="#exits">04 Exits</a><a href="#regimes">05 Regimes</a><a href="#defense">06 Defense</a><a href="#supply">07 Supply</a>
   </nav>
+  <button class="theme-toggle" id="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Toggle light/dark mode"><span class="knob" aria-hidden="true"></span></button>
 </header>
 
 <div class="hero">
   <div class="towers" aria-hidden="true">
-    <svg width="180" height="72" viewBox="0 0 180 72" fill="none" stroke="#ece9e2" stroke-width="2">
+    <svg width="180" height="72" viewBox="0 0 180 72" fill="none" style="stroke:var(--ink)" stroke-width="2">
       <rect x="28" y="14" width="46" height="58"/><rect x="106" y="14" width="46" height="58"/>
       <line x1="28" y1="26" x2="74" y2="26"/><line x1="28" y1="38" x2="74" y2="38"/>
       <line x1="28" y1="50" x2="74" y2="50"/><line x1="106" y1="26" x2="152" y2="26"/>
@@ -55,7 +56,12 @@
           <div class="ctl"><label>Multiplier m <output id="y-m-out">1.00</output></label>
             <input id="y-m" type="range" min="0.1" max="3" step="0.05" value="1"></div>
           <div class="ctl"><label>Base issuance / day</label>
-            <select id="y-base"><option value="500000">500k</option><option value="1000000" selected>1M</option><option value="2000000">2M</option></select></div>
+            <input id="y-base" type="number" list="y-base-presets" value="1000000" min="0" step="100000">
+            <datalist id="y-base-presets">
+              <option value="500000" label="500k"></option>
+              <option value="1000000" label="1M"></option>
+              <option value="2000000" label="2M"></option>
+            </datalist></div>
         </div>
         <div><div class="graph" id="y-graph"></div><div class="readout" id="y-read" aria-live="polite"></div></div>
       </div>
@@ -74,7 +80,7 @@
       <div class="try-grid">
         <div class="controls">
           <div class="ctl"><label>Yesterday close Plast <output id="l-p-out">4,200</output></label>
-            <input id="l-p" type="range" min="900" max="12000" step="100" value="4200"></div>
+            <input id="l-p" type="range" min="100" max="15000" step="100" value="4200"></div>
           <div class="ctl"><label>Hour you buy <output id="l-t-out">14h</output></label>
             <input id="l-t" type="range" min="0" max="24" step="0.5" value="14"></div>
           <div class="ctl"><label>Demand</label>
@@ -103,11 +109,16 @@
       <div class="try-grid">
         <div class="controls">
           <div class="ctl"><label>Yesterday close (ETH) <output id="c-p-out">0.90</output></label>
-            <input id="c-p" type="range" min="0.1" max="5" step="0.05" value="0.9"></div>
+            <input id="c-p" type="range" min="0.01" max="100" step="0.01" value="0.9"></div>
           <div class="ctl"><label>Hour you bid <output id="c-t-out">10h</output></label>
             <input id="c-t" type="range" min="0" max="24" step="0.5" value="10"></div>
           <div class="ctl"><label>Seats per day</label>
-            <select id="c-s"><option value="0">0 · closed</option><option value="1" selected>1</option><option value="5">5</option></select></div>
+            <input id="c-s" type="number" list="c-s-presets" value="1" min="0" step="1">
+            <datalist id="c-s-presets">
+              <option value="0" label="closed"></option>
+              <option value="1" label="1"></option>
+              <option value="5" label="5"></option>
+            </datalist></div>
         </div>
         <div><div class="graph" id="c-graph"></div><div class="readout" id="c-read" aria-live="polite"></div></div>
       </div>
@@ -122,12 +133,23 @@
       <div class="try-head">Try it · resolution fee curve</div>
       <div class="try-grid">
         <div class="controls">
-          <div class="ctl"><label>Exit pressure P <output id="e-p-out">5.0%</output></label>
-            <input id="e-p" type="range" min="0" max="30" step="0.5" value="5"></div>
+          <div class="ctl"><label>Exit pressure <output id="e-p-out">elevated · 5%</output></label>
+            <input id="e-p" type="range" min="0" max="3" step="1" value="1" list="e-p-stops">
+            <datalist id="e-p-stops">
+              <option value="0" label="quiet"></option>
+              <option value="1" label="elevated"></option>
+              <option value="2" label="heavy"></option>
+              <option value="3" label="bank run"></option>
+            </datalist></div>
           <div class="ctl"><label>Preset</label>
             <select id="e-s"><option value="quiet">quiet</option><option value="elevated" selected>elevated</option><option value="heavy">heavy</option><option value="bankrun">bank run</option></select></div>
           <div class="ctl"><label>Exit size ($STANDARD)</label>
-            <select id="e-z"><option value="10000" selected>10,000</option><option value="100000">100,000</option><option value="1000000">1,000,000</option></select></div>
+            <input id="e-z" type="number" list="e-z-presets" value="100000" min="0" step="10000">
+            <datalist id="e-z-presets">
+              <option value="10000" label="10k"></option>
+              <option value="100000" label="100k"></option>
+              <option value="1000000" label="1M"></option>
+            </datalist></div>
         </div>
         <div><div class="graph" id="e-graph"></div><div class="readout" id="e-read" aria-live="polite"></div></div>
       </div>
@@ -140,7 +162,7 @@
   <section class="chapter" id="regimes">
     <div class="ch-num">05 · REGIMES</div>
     <h2>Will the bank <em>flip?</em></h2>
-    <p class="short"><strong>Short answer —</strong> one signal: <span class="hl num">F_n = buys − sells</span> (ETH). Fee routing follows <span class="hl num">sign(F_n)</span>; issuance follows <span class="hl num">signal = F_{n−1} + F_{n−2}</span>. Same math as the sentinel agent — wire it live later.</p>
+    <p class="short"><strong>Short answer —</strong> one signal: <span class="hl num">F_n = buys − sells</span> (ETH)<br /> Fee routing follows <span class="hl num">sign(F_n)</span><br /> issuance follows <span class="hl num">signal = F_{n−1} + F_{n−2}</span></p>
     <div class="try">
       <div class="try-head">Try it · flip forecaster (live sentinel logic)</div>
       <div class="try-grid">
@@ -211,7 +233,9 @@
   </section>
 </main>
 
-<footer>STANDARD × Research · reache me on X [@nuel_ikwuoma](https://a.com/nuel_ikwuoma)</footer>
-<script type="module" src="./app.js"></script>
+<footer>STANDARD × Research · I'm on 𝕏 <a href="https://x.com/nuel_ikwuoma">@nuel_ikwuoma</a></footer>
+<!-- Bump ?v= on the module chain (here + app.js/data.js imports) whenever JS
+     changes, so browsers can't serve a stale cached module against fresh HTML. -->
+<script type="module" src="./app.js?v=2"></script>
 </body>
 </html>

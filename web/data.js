@@ -13,7 +13,7 @@ import {
   SUPPLY_CAP,
   SUPPLY_GENESIS,
   SUPPLY_BUDGET,
-} from "./vendor/math.js";
+} from "./vendor/math.js?v=2";
 
 export {
   branchDailyYield,
@@ -45,8 +45,8 @@ export const PARAMS = {
   // Resolution fee: quadratic floor -> ceiling over pressure P = W/(D+W)
   feeFloor: 0.005, // 0.5% quiet
   feeCeiling: 0.25, // 25% bank run
-  pressureSat: 0.3, // saturates at 30% exiting in 7d
-  presets: { quiet: 0.01, elevated: 0.05, heavy: 0.12, bankrun: 0.28 },
+  pressureSat: 0.5, // saturates at 50% exiting in 7d (spans the heavy/bank-run presets)
+  presets: { quiet: 0.01, elevated: 0.05, heavy: 0.35, bankrun: 0.5 },
 };
 
 // Deterministic PRNG (same family as sentinel mock) for stable mock series.
