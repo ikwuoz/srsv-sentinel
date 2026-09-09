@@ -1,7 +1,5 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  // Static deploy of web/ (the charter guide). The generated vendor math
-  // (gitignored) is rebuilt from src/math.ts at deploy time.
   "installCommand": "npm install --no-audit --no-fund",
   "buildCommand": "npm run build:web-math",
   "outputDirectory": "web"
